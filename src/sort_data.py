@@ -1,4 +1,5 @@
 from operator import itemgetter
+from src.remove_incorrect_data import remove_incorrect_data
 
 
 def sort_data(data: list[dict], reversed=False):
@@ -8,4 +9,4 @@ def sort_data(data: list[dict], reversed=False):
     :param reversed: флаг для вывода списка в обратном порядке
     :return: отсортированный список
     """
-    return sorted(data, key=itemgetter('state', 'date'), reverse=reversed)
+    return sorted(remove_incorrect_data(data), key=itemgetter('state', 'date'), reverse=reversed)
