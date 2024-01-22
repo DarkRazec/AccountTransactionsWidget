@@ -1,4 +1,5 @@
 from src.sort_data import sort_data
+from src.remove_incorrect_data import remove_incorrect_data
 import time
 
 
@@ -18,18 +19,18 @@ def show_operations_data(data: list[dict], num_to_show: int = 5):
     :param num_to_show: количество операций
     :return: строку с данными
     """
-    data = sort_data(data, reversed=True)
+    new_data = sort_data(remove_incorrect_data(data), reversed=True)
     data_to_show = ""
     for i in range(num_to_show):
-        data_time = time.strptime(data[i].get('date').split('T')[0], '%Y-%m-%d')
-        data_from = data[i].get('from')
-        to_num, to_name = data[i].get('to')[::-1].split(" ", maxsplit=1)
+        data_time = time.strptime(new_data[i].get('date').split('T')[0], '%Y-%m-%d')
+        data_from = new_data[i].get('from')
+        to_num, to_name = new_data[i].get('to')[::-1].split(" ", maxsplit=1)
 
-        data_to_show += f"{data_time.tm_mday}.{data_time.tm_mon}.{data_time.tm_year} {data[i].get('description')}\n"
+        data_to_show += f"{data_time.tm_mday}.{data_time.tm_mon}.{data_time.tm_year} {new_data[i].get('description')}\n"
         if data_from:  # эти данные могут отсутствовать, например, при открытии счета
             from_num, from_name = data_from[::-1].split(" ", maxsplit=1)
             data_to_show += f"{form_name_num(from_name, from_num)} -> "
         data_to_show += f"{form_name_num(to_name, to_num)}\n"
-        data_to_show += f"{data[i].get('operationAmount').get('amount')} {data[i].get('operationAmount').get('currency').get('name')}\n\n"
+        data_to_show += f"{new_data[i].get('operationAmount').get('amount')} {new_data[i].get('operationAmount').get('currency').get('name')}\n\n"
 
     return data_to_show.strip("\n")
